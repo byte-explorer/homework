@@ -1,6 +1,6 @@
 [
     {
         "target" : "localhost",
-        "test_suites" : ["test_suites/happy_path.json"]
+        "test_suites" : ["test_suites/happy_path.json", "test_suites/error_cases.json"]
     }
 ]

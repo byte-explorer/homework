@@ -70,10 +70,10 @@
         "exp_permissions" : "drwxrwxr-x"
     },
     {
-        "name" : "happy_path_max_path_length",
-        "depth" : 371,
-        "folder_name_length" : 10,
-        "flags" : ["-p"]
+        "name" : "happy_path_allow_spaces",
+        "depth" : 100,
+        "flags" : ["-p"],
+        "allow_spaces" : true
     },
     {
         "name" : "happy_path_verbose",

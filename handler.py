@@ -24,17 +24,8 @@ class TestHandler:
 				logger.debug(f"Target: {target_name}, Test case: {test_case}")
 				execute_result, check_result = self._run_single(test_target, test_case)
 				# Check results against test case spec		
-				test_case.test_result = TestCaseResult(
-					# Check if mkdir run didn't have errors (if expected)
-					test_case.exp_run_no_error == execute_result.success,
-					# Check if output dir exists (if expected)
-					test_case.exp_existance == check_result.folder_exists,
-					# Check expected output
-					True if test_case.exp_run_output is None else \
-						execute_result.output.strip() in test_case.exp_run_output.strip(),
-					# Check expected dir permissions
-					True if test_case.exp_permissions is None else check_result.permissions_check_status
-				)
+				test_case.test_result = self._check_results(test_case, execute_result, check_result)
+				# Log results
 				if test_case.test_result:
 					logger.info(f"[PASS] Test case name: {test_case.name}")
 				else:
@@ -61,6 +52,23 @@ class TestHandler:
 			execute_result = ExecuteResult(success=False, output="Target wasn't created")
 			check_result = CheckResult(success=False, output="Check wasn't executed")
 		return execute_result, check_result
+
+	@staticmethod
+	def _check_results(
+			test_case: TestCase, execute_result: ExecuteResult, check_result: CheckResult
+		) -> TestCaseResult:
+		"""Check given results against test case spec"""
+		return TestCaseResult(
+			# Check if mkdir run didn't have errors (if expected)
+			test_case.exp_run_no_error == execute_result.success,
+			# Check if output dir exists (if expected)
+			test_case.exp_existance == check_result.folder_exists,
+			# Check expected output
+			True if test_case.exp_run_output is None else \
+				execute_result.output.strip() in test_case.exp_run_output.strip(),
+			# Check expected dir permissions
+			True if test_case.exp_permissions is None else check_result.permissions_check_status
+		)
 
 	@staticmethod
 	def target_factory(target_type: str) -> typing.Optional[TestTarget]:

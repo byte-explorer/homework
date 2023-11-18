@@ -65,6 +65,6 @@ class PathFactory:
         if valid_name:
             chars = string.ascii_letters + string.digits + (' ' if allow_spaces else '') + '_'
         else:
-            chars = string.printable if allow_spaces else string.ascii_letters + string.digits
+            chars = string.ascii_letters + string.digits + "!@#^"
 
         return ''.join(random.choice(chars) for _ in range(folder_name_length)).strip()

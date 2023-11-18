@@ -1,0 +1,51 @@
+[
+    {
+        "name" : "error_case_dir_already_exist_1_2",
+        "base_dir" : "/tmp/already_exists",
+        "depth" : 0,
+        "clean_up" : false
+    },
+    {
+        "name" : "error_case_dir_already_exist_2_2",
+        "base_dir" : "/tmp/already_exists",
+        "depth" : 0,
+        "exp_run_no_error" : false,
+        "exp_run_output" : "mkdir: cannot create directory ‘/tmp/already_exists’: File exists\n"
+    },
+    {
+        "name" : "error_case_max_dir_name_length",
+        "folder_name_length" : 256,
+        "exp_run_no_error" : false,
+        "exp_existance" : false
+    },
+    {
+        "name" : "error_case_disable_access_1_3",
+        "user_run" : "root",
+        "base_dir" : "/tmp/disable_access",
+        "depth" : 0,
+        "flags" : ["-m", "770"],
+        "clean_up" : false
+    },
+    {
+        "name" : "error_case_disable_access_2_3",
+        "user_run" : "root",
+        "base_dir" : "/tmp/disable_access/new",
+        "depth" : 0,
+        "flags" : ["-m", "770"],
+        "exp_existance" : false
+    },
+    {
+        "name" : "error_case_disable_access_3_3",
+        "user_run" : "root",
+        "base_dir" : "/tmp/disable_access",
+        "depth" : 0,
+        "flags" : ["-p"]
+    },
+    {
+        "name" : "error_case_forbidden_chars",
+        "depth" : 100,
+        "valid_folder_name" : false,
+        "exp_run_no_error" : false,
+        "exp_existance" : false
+    }
+]

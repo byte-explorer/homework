@@ -9,11 +9,11 @@ FR_007 - mkdir should be able to create a directory with specific symbolic permi
 FR_008 - mkdir should report no error if folder already exists using -p flag
 FR_009 - mkdir should be able to create parent directories using -p flag
 FR_010 - mkdir should not affect parent directries mode if created with -p flag by any -m option
-FR_011 - mkdir should be able to create parent directories using -p flag so total path is not greater than 4096 chars
+FR_011 - mkdir should be able to create directories with spaces in its name
 FR_012 - mkdir should print a message for each created directory using -v / --verbose flag
 
 ***ERROR CASES***
 FR_013 - mkdir should report an error if folder already exists
 FR_014 - mkdir should not be able to create a directory which name is grater than 255 chars
 FR_015 - mkdir should be able to create a directory permissions so other users cannot access it
-FR_016 - mkdir should not be able to create parent directories using -p flag so total path is greater than 4096 chars
+FR_016 - mkdir should not be able to create directories with forbidden chars
