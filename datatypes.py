@@ -78,3 +78,8 @@ class CheckResult:
 	permissions_check_status: typing.Optional[bool] = None
 	# Field to store check output (stdout, stderr)
 	output: typing.Optional[str] = None
+
+@dataclass
+class TargetSpecs:
+	host: str
+	parameters: typing.Optional[str] = None

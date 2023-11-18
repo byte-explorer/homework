@@ -10,7 +10,7 @@
         "base_dir" : "/tmp/already_exists",
         "depth" : 0,
         "exp_run_no_error" : false,
-        "exp_run_output" : "mkdir: cannot create directory ‘/tmp/already_exists’: File exists\n"
+        "exp_run_output" : "mkdir: cannot create directory ‘/tmp/already_exists’: File exists\n/usr/bin/mkdir: cannot create directory '/tmp/already_exists': File exists\n"
     },
     {
         "name" : "error_case_max_dir_name_length",

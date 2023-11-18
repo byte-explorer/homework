@@ -2,5 +2,13 @@
     {
         "target" : "localhost",
         "test_suites" : ["test_suites/happy_path.json", "test_suites/error_cases.json"]
+    },
+    {
+        "target" : "dockerhost_arm64v8/ubuntu:20.04",
+        "test_suites" : ["test_suites/happy_path.json", "test_suites/error_cases.json"]
+    },
+    {
+        "target" : "dockerhost_oraclelinux:9",
+        "test_suites" : ["test_suites/happy_path.json", "test_suites/error_cases.json"]
     }
 ]

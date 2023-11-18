@@ -2,14 +2,15 @@ from enum import Enum
 import logging
 import typing
 
-from datatypes import CheckResult, ExecuteResult, TestCase, TestCaseResult
-from target import LocalHost, TestTarget
+from datatypes import CheckResult, ExecuteResult, TargetSpecs, TestCase, TestCaseResult
+from target import DockerHost, LocalHost, TestTarget
 from utils import PathFactory
 
 logger = logging.getLogger(__name__)
 
 class SupportedTargets(Enum):
-	LOCALHOST = "LocalHost"
+	LOCALHOST = LocalHost
+	DOCKERHOST = DockerHost
 
 class TestHandler:
 	def __init__(self, test_cases: typing.List) -> None:
@@ -27,11 +28,11 @@ class TestHandler:
 				test_case.test_result = self._check_results(test_case, execute_result, check_result)
 				# Log results
 				if test_case.test_result:
-					logger.info(f"[PASS] Test case name: {test_case.name}")
+					logger.info(f"[PASS] Target: {target_name}, Test case name: {test_case.name}")
 				else:
 					logger.info(
-						f"[FAIL] Test case name: {test_case.name}, Test case spec: {test_case}, "
-						f"Exec status: {execute_result}, Check status: {check_result}"
+						f"[FAIL] Target: {target_name}, Test case name: {test_case.name}, "
+						f"Test case spec: {test_case}, Exec status: {execute_result}, Check status: {check_result}"
 					)
 
 	def _run_single(self, test_target: TestTarget, test_case: TestCase) -> typing.Tuple[ExecuteResult, CheckResult]:
@@ -74,8 +75,8 @@ class TestHandler:
 	def target_factory(target_type: str) -> typing.Optional[TestTarget]:
 		target = None
 		try:
-			if SupportedTargets[target_type.upper()] == SupportedTargets.LOCALHOST:
-				target = LocalHost()
+			parsed_type = TargetSpecs(*target_type.split("_"))
+			target = SupportedTargets[parsed_type.host.upper()].value(parsed_type.parameters)
 		except KeyError:
 			logger.exception("Requested target doesn't exist - {target_type}!")
 		
