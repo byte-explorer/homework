@@ -4,6 +4,24 @@
         "user_run" : "testuser",
         "user_check" : "testuser",
         "depth" : 1,
-        "expected_result" : true
+        "exp_permissions" : "drwxrwxr-x"
+    },
+    {
+        "name" : "happy_path_version",
+        "user_run" : "testuser",
+        "user_check" : "testuser",
+        "depth" : 1,
+        "exp_existance" : false,
+        "flags" : ["--version"],
+        "exp_run_output" : "mkdir (GNU coreutils) 8.30\nCopyright (C) 2018 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by David MacKenzie."
+    },
+    {
+        "name" : "happy_path_help",
+        "user_run" : "testuser",
+        "user_check" : "testuser",
+        "depth" : 1,
+        "exp_existance" : false,
+        "flags" : ["--help"],
+        "exp_run_output" : "Usage: mkdir [OPTION]... DIRECTORY...\nCreate the DIRECTORY(ies), if they do not already exist.\n\nMandatory arguments to long options are mandatory for short options too.\n  -m, --mode=MODE   set file mode (as in chmod), not a=rwx - umask\n  -p, --parents     no error if existing, make parent directories as needed\n  -v, --verbose     print a message for each created directory\n  -Z                   set SELinux security context of each created directory\n                         to the default type\n      --context[=CTX]  like -Z, or if CTX is specified then set the SELinux\n                         or SMACK security context to CTX\n      --help     display this help and exit\n      --version  output version information and exit\n\nGNU coreutils online help: <https://www.gnu.org/software/coreutils/>\nFull documentation at: <https://www.gnu.org/software/coreutils/mkdir>\nor available locally via: info '(coreutils) mkdir invocation'"
     }
 ]

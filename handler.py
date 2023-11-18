@@ -2,7 +2,7 @@ from enum import Enum
 import logging
 import typing
 
-from datatypes import TestCase
+from datatypes import CheckResult, ExecuteResult, TestCase, TestCaseResult
 from target import LocalHost, TestTarget
 from utils import PathFactory
 
@@ -22,17 +22,27 @@ class TestHandler:
 			test_target = self.target_factory(target_name)
 			for test_case in self.test_cases[target_name]:
 				logger.debug(f"Target: {target_name}, Test case: {test_case}")
-				run_status, run_exec_info, check_status, check_exec_info = self._run_single(test_target, test_case)
-				# Check and report results		
-				test_case.test_result = True if test_case.expected_result == all([run_status, check_status]) else False
+				execute_result, check_result = self._run_single(test_target, test_case)
+				# Check results against test case spec		
+				test_case.test_result = TestCaseResult(
+					# Check if mkdir run didn't have errors (if expected)
+					test_case.exp_run_no_error == execute_result.success,
+					# Check if output dir exists (if expected)
+					test_case.exp_existance == check_result.folder_exists,
+					True if test_case.exp_run_output is None else \
+						execute_result.output.strip() in test_case.exp_run_output.strip(),
+					True if test_case.exp_permissions is None else check_result.permissions_check_status
+				)
+				logger.debug(f"TestCaseResult: {test_case.test_result} Execute Result: {execute_result}, Check Result: {check_result}"
+				)
 				if test_case.test_result:
 					logger.info(f"[PASS] Test case name: {test_case.name}")
 				else:
 					logger.info(
-						f"[FAIL] Test case name: {test_case.name}, Expected: {test_case.expected_result}"
-						f"Run status: {run_status}, ({run_exec_info}) Check status: {check_status} ({check_exec_info})"
+						f"[FAIL] Test case name: {test_case.name}, Test case spec: {test_case}, "
+						f"Exec status: {execute_result}, Check status: {check_result}"
 			)
-	def _run_single(self, test_target: TestTarget, test_case: TestCase) -> typing.Tuple:
+	def _run_single(self, test_target: TestTarget, test_case: TestCase) -> typing.Tuple[ExecuteResult, CheckResult]:
 		"""Run single test case against single test target."""
 		if test_target is not None:
 			users = set([test_case.user_run, test_case.user_check])
@@ -41,15 +51,15 @@ class TestHandler:
 				test_target.add_user(user)
 			# Run the test and check results
 			target_path = self.path_factory.create_path(test_case)
-			run_status, run_exec_info = test_target.execute(target_path, test_case.user_run, test_case.flags)
-			check_status, check_exec_info = test_target.check(target_path, test_case.user_check)
+			execute_result = test_target.execute(target_path, test_case.user_run, test_case.flags)
+			check_result = test_target.check(target_path, test_case.user_check, test_case.exp_permissions)
 			# Clean up
-			if test_case.clean_up and check_status:
+			if test_case.clean_up and check_result.folder_exists:
 				test_target.clean(test_case.base_dir, target_path)
 		else:
-			run_status, check_status = None, None
-			run_exec_info, check_exec_info = "Target wasn't created", "Check wasn't executed"
-		return run_status, run_exec_info, check_status, check_exec_info
+			execute_result = ExecuteResult(success=False, output="Target wasn't created")
+			check_result = CheckResult(success=False, output="Check wasn't executed")
+		return execute_result, check_result
 
 	@staticmethod
 	def target_factory(target_type: str) -> typing.Optional[TestTarget]:
