@@ -10,9 +10,8 @@ from handler import TestHandler
 logger = logging.getLogger(__name__)
 
 def parse_arguments() -> argparse.Namespace:
+	"""Parse script arguments."""
 	parser = argparse.ArgumentParser(description="Test script - mkdir")
-
-	# Add the arguments
 	parser.add_argument("config_file", help="Path to the test configuration file", type=str)
 	parser.add_argument("--debug", help="Enable debug logging", action="store_true")
 	
@@ -35,6 +34,7 @@ def parse_test_config(config_path: str) -> typing.Dict:
 	return test_cases
 	
 def main() -> None:
+	"""Main test routine."""
 	args = parse_arguments()
 	# Enable logging
 	log_level = logging.DEBUG if args.debug else logging.INFO
@@ -45,7 +45,6 @@ def main() -> None:
 
 	test_handler = TestHandler(test_cases=test_cases)
 	test_handler.run()
-
 
 if __name__ == "__main__":
 	main()

@@ -29,11 +29,11 @@ class TestHandler:
 					test_case.exp_run_no_error == execute_result.success,
 					# Check if output dir exists (if expected)
 					test_case.exp_existance == check_result.folder_exists,
+					# Check expected output
 					True if test_case.exp_run_output is None else \
 						execute_result.output.strip() in test_case.exp_run_output.strip(),
+					# Check expected dir permissions
 					True if test_case.exp_permissions is None else check_result.permissions_check_status
-				)
-				logger.debug(f"TestCaseResult: {test_case.test_result} Execute Result: {execute_result}, Check Result: {check_result}"
 				)
 				if test_case.test_result:
 					logger.info(f"[PASS] Test case name: {test_case.name}")
@@ -41,7 +41,8 @@ class TestHandler:
 					logger.info(
 						f"[FAIL] Test case name: {test_case.name}, Test case spec: {test_case}, "
 						f"Exec status: {execute_result}, Check status: {check_result}"
-			)
+					)
+
 	def _run_single(self, test_target: TestTarget, test_case: TestCase) -> typing.Tuple[ExecuteResult, CheckResult]:
 		"""Run single test case against single test target."""
 		if test_target is not None:

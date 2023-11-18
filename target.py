@@ -17,6 +17,11 @@ class TestTarget(ABC):
 		self.execute_command = ["mkdir"]
 		self.test_command = ["ls",  "-ld"]
 		self.clean_command = ["rm", "-r"]
+
+	@abstractmethod
+	def run_command(self, command: typing.List[str]) -> typing.Tuple[bool, str]:
+		"""Run command against the target. Command should be checked and sanitized beforehand."""
+		pass
  
 	def add_user(self, user: str) -> None:
 		# Check if the test user exists
@@ -27,36 +32,6 @@ class TestTarget(ABC):
 			logger.debug(f"User '{user}' does not exist. Creating user...")
 			self.run_command(['sudo', 'useradd', '-m', user])
 			logger.debug(f"User '{user}' created.")
-
-	@abstractmethod
-	def run_command(self, command: typing.List[str]) -> typing.Tuple[bool, str]:
-		"""Run command against the target. Command should be checked and sanitized beforehand."""
-		pass
-
-	@abstractmethod
-	def execute(self, target_path: str, user: str, test_case: TestCase) -> ExecuteResult:
-		pass
-
-	@abstractmethod
-	def check(self, target_path: str, user: str, exp_permissions: str) -> CheckResult:
-		pass
-
-	@abstractmethod
-	def clean(self, base_dir: str, target_path: str) -> None:
-		pass
-
-class LocalHost(TestTarget):
-	"""Test target to run on localhost"""
-	def __init__(self):
-		self.cmd_prefix = []
-		super().__init__()
-
-	def run_command(self, command: typing.List[str]) -> typing.Tuple[bool, str]:
-		"""Run command against the localhost target."""
-		logger.debug(f"Running '{command}' command")
-		result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-		return result.returncode == 0, result.stdout + result.stderr
 
 	def execute(self, target_path: str, user: str, flags: typing.List[str]) -> ExecuteResult:
 		if not is_safe_path(target_path):
@@ -83,7 +58,6 @@ class LocalHost(TestTarget):
 		if not existance_status:
 			return CheckResult(
 				folder_exists=existance_status,
-				exp_permissions=exp_permissions,
 				output=check_existance_info
 			)
 		
@@ -94,7 +68,6 @@ class LocalHost(TestTarget):
 		return CheckResult(
 			folder_exists=existance_status,
 			permissions_check_status=permissions_check_status,
-			exp_permissions=exp_permissions,
 			output=check_existance_info
 		)
 
@@ -109,3 +82,17 @@ class LocalHost(TestTarget):
 
 		if not status:
 			logger.warning(f"Error running clean command - {exec_info}")
+
+
+class LocalHost(TestTarget):
+	"""Test target to run on localhost"""
+	def __init__(self):
+		self.cmd_prefix = []
+		super().__init__()
+
+	def run_command(self, command: typing.List[str]) -> typing.Tuple[bool, str]:
+		"""Run command against the localhost target."""
+		logger.debug(f"Running '{command}' command")
+		result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+		return result.returncode == 0, result.stdout + result.stderr

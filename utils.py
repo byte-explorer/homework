@@ -47,7 +47,7 @@ def is_safe_path(path: str):
 
 
 class PathFactory:
-    """Path factory to generate random based on TestCase requirements."""
+    """Path factory to generate random path based on TestCase requirements."""
     def create_path(self, test_case: TestCase) -> str:
         """Create a random path based on TestCase"""
         path = Path(test_case.base_dir)
