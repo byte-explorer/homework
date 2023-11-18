@@ -75,7 +75,11 @@ class TestTarget(ABC):
 		# Convert given dirs into Path objects
 		base_dir, target_path = Path(base_dir), Path(target_path)
 		# Find top directory path
-		top_directory_path = base_dir / target_path.relative_to(base_dir).parts[0]
+		try:
+			top_directory_path = base_dir / target_path.relative_to(base_dir).parts[0]
+		except IndexError:
+			top_directory_path = base_dir
+		assert is_safe_path(top_directory_path)
 		# Construct clean command and clear created folder
 		clean_command = self.cmd_prefix + self.set_user + ["root"] + self.clean_command + [str(top_directory_path)]
 		status, exec_info = self.run_command(clean_command)

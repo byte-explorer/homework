@@ -1,0 +1,19 @@
+***HAPPY PATH***
+FR_001 - mkdir should be able to create a directory
+FR_002 - mkdir should be able provide help info using --help flag
+FR_003 - mkdir should be able provide its version using --version flag
+FR_004 - mkdir should be able to create a directory which name is not grater than 255 chars
+FR_005 - mkdir should be able to create a directory with drwxrwxr-x permissions by default
+FR_006 - mkdir should be able to create a directory with specific numeric permissions using -m flag
+FR_007 - mkdir should be able to create a directory with specific symbolic permissions using -m flag
+FR_008 - mkdir should report no error if folder already exists using -p flag
+FR_009 - mkdir should be able to create parent directories using -p flag
+FR_010 - mkdir should not affect parent directries mode if created with -p flag by any -m option
+FR_011 - mkdir should be able to create parent directories using -p flag so total path is not greater than 4096 chars
+FR_012 - mkdir should print a message for each created directory using -v / --verbose flag
+
+***ERROR CASES***
+FR_013 - mkdir should report an error if folder already exists
+FR_014 - mkdir should not be able to create a directory which name is grater than 255 chars
+FR_015 - mkdir should be able to create a directory permissions so other users cannot access it
+FR_016 - mkdir should not be able to create parent directories using -p flag so total path is greater than 4096 chars

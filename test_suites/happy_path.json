@@ -1,7 +1,6 @@
 [
     {
-        "name" : "happy_path_basic",
-        "exp_permissions" : "drwxrwxr-x"
+        "name" : "happy_path_basic"
     },
     {
         "name" : "happy_path_version",
@@ -14,5 +13,73 @@
         "flags" : ["--help"],
         "exp_existance" : false,
         "exp_run_output" : "Usage: mkdir [OPTION]... DIRECTORY...\nCreate the DIRECTORY(ies), if they do not already exist.\n\nMandatory arguments to long options are mandatory for short options too.\n  -m, --mode=MODE   set file mode (as in chmod), not a=rwx - umask\n  -p, --parents     no error if existing, make parent directories as needed\n  -v, --verbose     print a message for each created directory\n  -Z                   set SELinux security context of each created directory\n                         to the default type\n      --context[=CTX]  like -Z, or if CTX is specified then set the SELinux\n                         or SMACK security context to CTX\n      --help     display this help and exit\n      --version  output version information and exit\n\nGNU coreutils online help: <https://www.gnu.org/software/coreutils/>\nFull documentation at: <https://www.gnu.org/software/coreutils/mkdir>\nor available locally via: info '(coreutils) mkdir invocation'"
+    },
+    {
+        "name" : "happy_path_max_dir_name_length",
+        "folder_name_length" : 255
+    },
+    {
+        "name" : "happy_path_set_permissions_0",
+        "exp_permissions" : "drwxrwxr-x"
+    },
+    {
+        "name" : "happy_path_set_permissions_1",
+        "flags" : ["-m", "777"],
+        "exp_permissions" : "drwxrwxrwx"
+    },
+    {
+        "name" : "happy_path_set_permissions_2",
+        "flags" : ["-m", "444"],
+        "exp_permissions" : "dr--r--r--"
+    },
+    {
+        "name" : "happy_path_set_permissions_3",
+        "flags" : ["-m", "u=rwx,g=rx,o=rx"],
+        "exp_permissions" : "drwxr-xr-x"
+    },
+    {
+        "name" : "happy_path_no_error_if_created_1_2",
+        "base_dir" : "/tmp/no_error_if_created",
+        "depth" : 0,
+        "clean_up" : false
+    },
+    {
+        "name" : "happy_path_no_error_if_created_2_2",
+        "base_dir" : "/tmp/no_error_if_created",
+        "depth" : 0,
+        "flags" : ["-p"]
+    },
+    {
+        "name" : "happy_path_create_parent_dirs",
+        "depth" : 10,
+        "flags" : ["-p"]
+    },
+    {
+        "name" : "happy_path_parent_dirs_mode_1_2",
+        "base_dir" : "/tmp/parent/dir/no/mode/change",
+        "depth" : 0,
+        "flags" : ["-m", "555", "-p"],
+        "exp_permissions" : "dr-xr-xr-x",
+        "clean_up" : false
+    },
+    {
+        "name" : "happy_path_parent_dirs_mode_2_2",
+        "base_dir" : "/tmp/parent",
+        "depth" : 0,
+        "flags" : ["-p"],
+        "exp_permissions" : "drwxrwxr-x"
+    },
+    {
+        "name" : "happy_path_max_path_length",
+        "depth" : 371,
+        "folder_name_length" : 10,
+        "flags" : ["-p"]
+    },
+    {
+        "name" : "happy_path_verbose",
+        "base_dir" : "/tmp/parent/verbose",
+        "depth" : 0,
+        "flags" : ["-v", "-p"],
+        "exp_run_output" : "mkdir: created directory '/tmp/parent'\nmkdir: created directory '/tmp/parent/verbose'\n"
     }
 ]

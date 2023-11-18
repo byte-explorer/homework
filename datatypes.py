@@ -33,7 +33,7 @@ class TestCase:
 	user_check: str = "testuser"
 	# Path depth
 	depth: int = 1
-	# Base directory
+	# Base directory (only /tmp is allowed)
 	base_dir: str = "/tmp"
 	# Length of individual folder names
 	folder_name_length: int = 10
