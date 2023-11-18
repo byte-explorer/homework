@@ -1,0 +1,6 @@
+[
+    {
+        "target" : "localhost",
+        "test_suites" : ["test_suites/happy_path.json"]
+    }
+]
