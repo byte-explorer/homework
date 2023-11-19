@@ -1,3 +1,4 @@
+"""Test Handler to execute tests and store results."""
 from enum import Enum
 import logging
 import typing
@@ -16,6 +17,7 @@ class SupportedTargets(Enum):
 
 
 class TestHandler:
+	"""Test Handler to execute tests and store results."""
 	def __init__(self, test_cases: typing.List) -> None:
 		self.test_cases: typing.Dict[str, typing.List[TestCase]] = test_cases
 		self.path_factory = PathFactory()
@@ -28,7 +30,7 @@ class TestHandler:
 				logger.debug(f"Target: {target_name}, Test case: {test_case}")
 				execute_result, check_result = self._run_single(test_target, test_case)
 				logger.debug(f"Exec: {execute_result}, Check: {check_result}")
-				# Check results against test case spec		
+				# Check results against test case spec
 				test_case.test_result = self._check_results(test_case, execute_result, check_result)
 				# Log results
 				if test_case.test_result:
@@ -77,11 +79,12 @@ class TestHandler:
 
 	@staticmethod
 	def target_factory(target_type: str) -> typing.Optional[TestTarget]:
+		"""Factory to create a test target based on given type."""
 		target = None
 		try:
 			parsed_type = TargetSpecs(*target_type.split("_"))
 			target = SupportedTargets[parsed_type.host.upper()].value(parsed_type.parameters)
 		except KeyError:
 			logger.exception("Requested target doesn't exist - {target_type}!")
-		
+
 		return target

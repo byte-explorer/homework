@@ -1,7 +1,9 @@
+"""Test framework datatypes."""
 from dataclasses import dataclass, field, fields
 import typing
 
 
+# pylint: disable=too-many-instance-attributes
 @dataclass
 class TestCaseResult:
 	"""Dataclass to store test case results"""
