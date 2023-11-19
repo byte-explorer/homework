@@ -43,8 +43,8 @@ class TestCase:
 	allow_spaces: bool = False
 	# Add a quote sign to start and end of path
 	add_quotes: bool = False
-	# Flag whether a valid folder name to be generated
-	valid_folder_name : bool = True
+	# Skip execution step
+	skip_execution: bool = False
 	# Security check
 	security_check: bool = True
 	# Flag whether created folder should be deleted after test

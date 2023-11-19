@@ -3,7 +3,7 @@ FR_001 - mkdir should be able to create a directory
 FR_002 - mkdir should be able provide help info using --help flag
 FR_003 - mkdir should be able provide its version using --version flag
 FR_004 - mkdir should be able to create a directory which name is not grater than 255 chars
-FR_005 - mkdir should be able to create a directory with drwxrwxr-x permissions by default
+FR_005 - mkdir should be able to create a directory with drwxrwxr-x/dr-xr-xr-x permissions (based on default umask) 
 FR_006 - mkdir should be able to create a directory with specific numeric permissions using -m flag
 FR_007 - mkdir should be able to create a directory with specific symbolic permissions using -m flag
 FR_008 - mkdir should report no error if folder already exists using -p flag
@@ -11,11 +11,15 @@ FR_009 - mkdir should be able to create parent directories using -p flag
 FR_010 - mkdir should not affect parent directries mode if created with -p flag by any -m option
 FR_011 - mkdir should be able to create directories with spaces in its name
 FR_012 - mkdir should print a message for each created directory using -v / --verbose flag
+FR_013 - mkdir should be able to create multiple directories
+FR_014 - mkdir should be able to create a dir with a special chars in its name
+FR_015 - mkdir should be able to resolve symlinks
+FR_016 - mkdir should be albe to resolve relational paths
 
 ***ERROR CASES***
-FR_013 - mkdir should report an error if folder already exists
-FR_014 - mkdir should not be able to create a directory which name is grater than 255 chars
-FR_015 - mkdir should be able to create a directory permissions so other users cannot access it
-FR_016 - mkdir should not be able to create directories with forbidden chars
-FR_017 - mkdir should report an error if no arguments provided
-FR_018 - mkdir should report an error if invalid option is provided
+FR_017 - mkdir should report an error if folder already exists
+FR_018 - mkdir should not be able to create a directory which name is grater than 255 chars
+FR_019 - mkdir should be able to create a directory permissions so other users cannot access it
+FR_020 - mkdir should report an error if no arguments provided
+FR_021 - mkdir should report an error if invalid option is provided
+FR_022 - mkdir should not be able to create a directory where the user does not have write permissions

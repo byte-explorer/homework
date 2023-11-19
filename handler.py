@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 class SupportedTargets(Enum):
 	"""Supperted Test Targets"""
 	LOCALHOST = LocalHost
-	DOCKERHOST = DockerHost
 	REMOTEHOST = RemoteHost
+	DOCKERHOST = DockerHost
 
 
 class TestHandler:
@@ -25,11 +25,11 @@ class TestHandler:
 		self.successful_run = True
 
 	def run(self) -> None:
-		"""Run all test cases against all test targets in parallel using threading."""
+		"""Run all test cases against all test targets concurrently."""
 		threads = []
 
 		def run_test(target_name: str, test_cases: typing.List[TestCase]) -> None:
-			"""Helper method to run test in a thread"""
+			"""Helper method to run a test in a thread"""
 			test_target = self.target_factory(target_name)
 			for test_case in test_cases:
 				logger.debug(f"Target: {test_target}, Test case: {test_case}")
@@ -106,7 +106,7 @@ class TestHandler:
 		"""Check given results against test case spec"""
 		return TestCaseResult(
 			# Check if mkdir run didn't have errors (if expected)
-			test_case.exp_run_no_error == execute_result.success,
+			True if test_case.skip_execution else test_case.exp_run_no_error == execute_result.success,
 			# Check if output dir exists (if expected)
 			test_case.exp_existance == check_result.folder_exists,
 			# Check expected output

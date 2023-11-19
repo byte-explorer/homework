@@ -28,10 +28,10 @@
     },
     {
         "name" : "error_case_disable_access_check",
-        "user_run" : "root",
         "base_dir" : "/tmp/disable_access/new",
         "depth" : 0,
         "flags" : ["-m", "770"],
+        "exp_run_no_error" : false,
         "exp_existance" : false
     },
     {
@@ -40,13 +40,6 @@
         "base_dir" : "/tmp/disable_access",
         "depth" : 0,
         "flags" : ["-p"]
-    },
-    {
-        "name" : "error_case_forbidden_chars",
-        "depth" : 100,
-        "valid_folder_name" : false,
-        "exp_run_no_error" : false,
-        "exp_existance" : false
     },
     {
         "name" : "error_case_no_arguments",
@@ -63,5 +56,15 @@
         "exp_existance" : false,
         "flags" : ["-K"],
         "exp_run_output" : "mkdir: invalid option -- 'K'\nTry 'mkdir --help' for more information.\n|/usr/bin/mkdir: invalid option -- 'K'\nTry '/usr/bin/mkdir --help' for more information.\n"
+    },
+    {
+        "name" : "error_case_no_write_permissions",
+        "depth" : 0,
+        "base_dir" : "",
+        "flags" : ["/new_dir"],
+        "security_check" : false,
+        "exp_run_no_error" : false,
+        "exp_existance" : false,
+        "clean_up" : false
     }
 ]

@@ -1,0 +1,82 @@
+[
+    {
+        "name" : "misc_cases_symlink_precondition",
+        "depth" : 0,
+        "base_dir" : "",
+        "flags" : ["/tmp/foo && ln -s /tmp/foo /tmp/bar"],
+        "security_check" : false,
+        "exp_existance" : false,
+        "clean_up" : false
+    },
+    {
+        "name" : "misc_cases_symlink_create",
+        "depth" : 0,
+        "base_dir" : "/tmp/bar/bar",
+        "clean_up" : false
+    },
+    {
+        "name" : "misc_cases_symlink_check",
+        "depth" : 0,
+        "base_dir" : "/tmp/foo/bar",
+        "skip_execution" : true
+    },
+    {
+        "name" : "misc_cases_symlink_cleanup",
+        "depth" : 0,
+        "base_dir" : "/tmp/foo",
+        "skip_execution" : true
+    },
+    {
+        "name" : "misc_cases_symlink_cleanup",
+        "depth" : 0,
+        "base_dir" : "/tmp/bar",
+        "skip_execution" : true,
+        "exp_permissions" : "lrwxrwxrwx"
+    },
+    {
+        "name" : "misc_cases_multiple_path_mixed_validity_pre_precondition",
+        "depth" : 0,
+        "base_dir" : "",
+        "flags" : ["/tmp/x"],
+        "security_check" : false,
+        "exp_existance" : false,
+        "clean_up" : false
+    },
+    {
+        "name" : "misc_cases_multiple_path_mixed_validity_pre_check",
+        "depth" : 0,
+        "base_dir" : "/tmp/x",
+        "skip_execution" : true,
+        "clean_up" : false
+    },
+    {
+        "name" : "misc_cases_multiple_path_mixed_validity_precondition",
+        "depth" : 0,
+        "base_dir" : "",
+        "flags" : ["/tmp/x", "/tmp/y", "/tmp/z"],
+        "security_check" : false,
+        "clean_up" : false,
+        "exp_existance" : false,
+        "exp_run_no_error" : false,
+        "exp_run_output" : "mkdir: cannot create directory '/tmp/x': File exists\n|mkdir: cannot create directory ‘/tmp/x’: File exists\n|/usr/bin/mkdir: cannot create directory '/tmp/x': File exists\n|mkdir: cannot create directory ‘/tmp/x’: File exists\n"
+    },
+    {
+        "name" : "misc_cases_multiple_path_mixed_validity_a",
+        "depth" : 0,
+        "base_dir" : "/tmp/x",
+        "exp_run_no_error" : false,
+        "exp_run_output" : "mkdir: cannot create directory '/tmp/x': File exists\n|mkdir: cannot create directory ‘/tmp/x’: File exists\n|/usr/bin/mkdir: cannot create directory '/tmp/x': File exists\n|mkdir: cannot create directory ‘/tmp/x’: File exists\n"
+    },
+    {
+        "name" : "misc_cases_multiple_path_mixed_validity_b",
+        "depth" : 0,
+        "base_dir" : "/tmp/y",
+        "skip_execution" : true
+    },
+    {
+        "name" : "misc_cases_multiple_path_mixed_validity_c",
+        "depth" : 0,
+        "base_dir" : "/tmp/z",
+        "skip_execution" : true
+    }
+]

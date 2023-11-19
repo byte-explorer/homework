@@ -36,7 +36,6 @@ class TestTarget(ABC):
 
 	def add_user(self, user: str) -> None:
 		"""Add a system user (if doesn't exist)"""
-		# Check if the test user exists
 		result, _ = self.run_command(['id', user])
 		if result:
 			logger.debug(f"User '{user}' already exists.")
@@ -47,6 +46,10 @@ class TestTarget(ABC):
 
 	def execute(self, test_case: TestCase, target_path: str) -> ExecuteResult:
 		"""Execute test case."""
+		if test_case.skip_execution:
+			return ExecuteResult(
+				output="Command execution was skipped"
+			)
 		if test_case.security_check and not is_safe_path(target_path):
 			return ExecuteResult(
 				success=False,
@@ -61,6 +64,7 @@ class TestTarget(ABC):
 
 	def check(self, test_case: TestCase, target_path: str) -> CheckResult:
 		"""Check test case execution results."""
+		# Don't check empty path
 		if target_path == "":
 			return CheckResult(
 				folder_exists=False,
@@ -84,7 +88,7 @@ class TestTarget(ABC):
 			)
 
 		# Check permissions
-		permissions = re.match(r'^([drwx-]+)\s+', check_existance_info).group(1)
+		permissions = re.match(r'^([l\-]?[drwx-]+)\s+', check_existance_info).group(1)
 		permissions_check_status = permissions == test_case.exp_permissions
 
 		return CheckResult(
@@ -110,8 +114,8 @@ class TestTarget(ABC):
 		except IndexError:
 			top_directory_path = base_dir
 		assert is_safe_path(str(top_directory_path))
-		# Construct clean command and clear created folder
-		clean_command = self.clean_command + [str(top_directory_path)]
+		# Construct clean command and remove created folder
+		clean_command = self.clean_command + ['"' + str(top_directory_path) + '"']
 		status, exec_info = self.run_command(clean_command)
 
 		if not status:
@@ -135,11 +139,16 @@ class LocalHost(TestTarget):
 		"""Construct a command so it can run for specific target under specific user."""
 		return self.set_user + [user] + command
 
+
 class RemoteHost(LocalHost):
 	"""Test target to run on localhost"""
 	def __init__(self, parameters: str):
 		super().__init__(parameters)
 		self.login = ["ssh", f"root@{self.parameters}"]
+
+	def _construct_command(self, user: str, command: typing.List[str]) -> typing.List[str]:
+		"""Construct a command so it can run for specific target under specific user."""
+		return self.set_user + [user] + ["'"] + command + ["'"]
 
 class DockerHost(TestTarget):
 	"""Test target to run on Docker host"""

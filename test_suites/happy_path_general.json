@@ -16,7 +16,7 @@
     },
     {
         "name" : "happy_path_max_dir_name_length",
-        "folder_name_length" : 256
+        "folder_name_length" : 255
     },
     {
         "name" : "happy_path_set_permissions_numeric_1",
@@ -71,5 +71,61 @@
         "depth" : 0,
         "flags" : ["-v", "-p"],
         "exp_run_output" : "mkdir: created directory '/tmp/parent'\nmkdir: created directory '/tmp/parent/verbose'\n|/usr/bin/mkdir: created directory '/tmp/parent'\n/usr/bin/mkdir: created directory '/tmp/parent/verbose'\n"
+    },
+    {
+        "name" : "happy_path_multiple_path_precondition",
+        "depth" : 0,
+        "base_dir" : "",
+        "flags" : ["/tmp/a", "/tmp/b", "/tmp/c"],
+        "security_check" : false,
+        "clean_up" : false,
+        "exp_existance" : false
+    },
+    {
+        "name" : "happy_path_multiple_path_check_a",
+        "depth" : 0,
+        "base_dir" : "/tmp/a",
+        "skip_execution" : true
+    },
+    {
+        "name" : "happy_path_multiple_path_check_b",
+        "depth" : 0,
+        "base_dir" : "/tmp/b",
+        "skip_execution" : true
+    },
+    {
+        "name" : "happy_path_multiple_path_check_c",
+        "depth" : 0,
+        "base_dir" : "/tmp/c",
+        "skip_execution" : true
+    },
+    {
+        "name" : "happy_path_special_chars",
+        "base_dir" : "/tmp/x@y#z",
+        "depth" : 0
+    },
+    {
+        "name" : "happy_path_relative_precondition",
+        "base_dir" : "/tmp/relative",
+        "depth" : 0,
+        "clean_up" : false
+    },
+    {
+        "name" : "happy_path_relative_check",
+        "base_dir" : "/tmp/relative/../path",
+        "depth" : 0,
+        "clean_up" : false
+    },
+    {
+        "name" : "happy_path_relative_cleanup",
+        "base_dir" : "/tmp/relative",
+        "flags" : ["-p"],
+        "depth" : 0
+    },
+    {
+        "name" : "happy_path_relative_cleanup",
+        "base_dir" : "/tmp/path",
+        "flags" : ["-p"],
+        "depth" : 0
     }
 ]

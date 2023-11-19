@@ -29,11 +29,6 @@ def is_safe_path(path: str):
 
 	path = PurePath(path)
 
-	# Check for relative path traversal
-	if ".." in path.parts:
-		logger.warning(f"Path traversal: {path}")
-		return False
-
 	# Check if path is absolute
 	if not path.is_absolute():
 		logger.warning(f"Provided path is not absolute: {path} {path.is_absolute()}")
@@ -78,10 +73,7 @@ class PathFactory:
 	@staticmethod
 	def generate_folder_name(test_case: TestCase) -> str:
 		"""Generate a folder name"""
-		if test_case.valid_folder_name:
-			chars = string.ascii_letters + string.digits + (" " if test_case.allow_spaces else "") + "_"
-		else:
-			chars = string.ascii_letters + string.digits + "!@#^"
+		chars = string.ascii_letters + string.digits + (" " if test_case.allow_spaces else "") + "_"
 		folder_name = "".join(random.choice(chars) for _ in range(test_case.folder_name_length)).strip()
 		# pylint: disable=anomalous-backslash-in-string
 		folder_name = folder_name.replace(" ", "\ ") # Add \ to whitespaces so they won't be considered as a new path
