@@ -3,6 +3,7 @@ import argparse
 from collections import defaultdict
 import json
 import logging
+import sys
 import typing
 
 from datatypes import TestCase
@@ -45,7 +46,12 @@ def main() -> None:
 	logger.debug(f"Parsed config: {test_cases}")
 
 	test_handler = TestHandler(test_cases=test_cases)
+	# Run the tests
 	test_handler.run()
+	# Report the results
+	test_handler.report()
+
+	sys.exit(0 if test_handler.successful_run else 1)
 
 if __name__ == "__main__":
 	main()

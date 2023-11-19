@@ -110,8 +110,8 @@ class LocalHost(TestTarget):
 		command = " ".join(self.login + command)
 		logger.debug(f"Running '{command}' command")
 		result = subprocess.run(
-			command, stdout=subprocess.PIPE,
-			stderr=subprocess.PIPE, text=True, shell=True, check=False
+			command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+			text=True, shell=True, check=False
 		)
 
 		return result.returncode == 0, result.stdout + result.stderr

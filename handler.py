@@ -21,6 +21,7 @@ class TestHandler:
 	def __init__(self, test_cases: typing.List) -> None:
 		self.test_cases: typing.Dict[str, typing.List[TestCase]] = test_cases
 		self.path_factory = PathFactory()
+		self.successful_run = True
 
 	def run(self) -> None:
 		"""Run all test cases against all test targets."""
@@ -40,6 +41,7 @@ class TestHandler:
 						f"[FAIL] Target: {target_name}, Test case: {test_case.name}, "
 						f"Test case spec: {test_case}, Exec status: {execute_result}, Check status: {check_result}"
 					)
+					self.successful_run = False
 
 	def _run_single(self, test_target: TestTarget, test_case: TestCase) -> typing.Tuple[ExecuteResult, CheckResult]:
 		"""Run single test case against single test target."""
@@ -59,6 +61,19 @@ class TestHandler:
 			execute_result = ExecuteResult(output="Target wasn't created")
 			check_result = CheckResult(output="Check wasn't executed")
 		return execute_result, check_result
+
+	def report(self) -> None:
+		"""Report test results and statistics."""
+		num_successful_test_cases =\
+			sum(1 for test_cases in self.test_cases.values() for case in test_cases if case.test_result)
+		num_total_test_cases = sum(1 for test_cases in self.test_cases.values() for _ in test_cases)
+		stats = f"{num_successful_test_cases}/{num_total_test_cases}"
+		tested_hosts = ", ".join(self.test_cases.keys())
+
+		if self.successful_run:
+			logger.info(f"/**TEST PASSED: {stats} succeful test cases. Tested hosts: {tested_hosts}**/")
+		else:
+			logger.info(f"/**TEST FAILED: {stats} succeful test cases. Tested hosts: {tested_hosts}**/")
 
 	@staticmethod
 	def _check_results(
