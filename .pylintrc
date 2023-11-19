@@ -7,6 +7,3 @@ max-line-length = 120
 
 # Disable logging-fstring-interpolation errors
 disable = logging-fstring-interpolation
-
-# Allow instance attributes
-too-many-instance-attributes=8

@@ -14,10 +14,10 @@ from utils import is_safe_path
 
 logger = logging.getLogger(__name__)
 
+
 class TestTarget(ABC):
 	"""Base class for test targets"""
 	def __init__(self, parameters: typing.Optional[str]):
-		self.cmd_prefix = []
 		self.login = []
 		self.set_user = ["sudo", "-u"]
 		self.add_user_commad = ['sudo', 'useradd', '-m']
@@ -88,13 +88,13 @@ class TestTarget(ABC):
 	def clean(self, base_dir: str, target_path: str) -> None:
 		"""Clean up after test execution."""
 		# Convert given dirs into Path objects
-		base_dir, target_path = Path(base_dir), Path(target_path)
+		base_dir, target_path = Path(base_dir.strip('"')), Path(target_path.strip('"'))
 		# Find top directory path
 		try:
 			top_directory_path = base_dir / target_path.relative_to(base_dir).parts[0]
 		except IndexError:
 			top_directory_path = base_dir
-		assert is_safe_path(top_directory_path)
+		assert is_safe_path(str(top_directory_path))
 		# Construct clean command and clear created folder
 		clean_command = self.clean_command + [str(top_directory_path)]
 		status, exec_info = self.run_command(clean_command)
@@ -107,9 +107,11 @@ class LocalHost(TestTarget):
 	"""Test target to run on localhost"""
 	def run_command(self, command: typing.List[str]) -> typing.Tuple[bool, str]:
 		"""Run command against the localhost target."""
+		command = " ".join(self.login + command)
 		logger.debug(f"Running '{command}' command")
 		result = subprocess.run(
-			self.login + command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=False
+			command, stdout=subprocess.PIPE,
+			stderr=subprocess.PIPE, text=True, shell=True, check=False
 		)
 
 		return result.returncode == 0, result.stdout + result.stderr
