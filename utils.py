@@ -52,19 +52,21 @@ class PathFactory:
         """Create a random path based on TestCase"""
         path = Path(test_case.base_dir)
         for _ in range(test_case.depth):
-            folder_name = self.generate_folder_name(
-                test_case.folder_name_length, test_case.allow_spaces, test_case.valid_folder_name
-            )
+            folder_name = self.generate_folder_name(test_case)
             path /= folder_name
 
         return str(path)
 
     @staticmethod
-    def generate_folder_name(folder_name_length: int, allow_spaces: bool, valid_name: bool) -> str:
+    def generate_folder_name(test_case: TestCase) -> str:
         """Generate a folder name"""
-        if valid_name:
-            chars = string.ascii_letters + string.digits + (' ' if allow_spaces else '') + '_'
+        if test_case.valid_folder_name:
+            chars = string.ascii_letters + string.digits + (' ' if test_case.allow_spaces else '') + '_'
         else:
-            chars = string.ascii_letters + string.digits + "!@#^"
+            chars = string.ascii_letters + string.digits + "!@#^"        
+        folder_name = ''.join(random.choice(chars) for _ in range(test_case.folder_name_length)).strip()
 
-        return ''.join(random.choice(chars) for _ in range(folder_name_length)).strip()
+        if test_case.add_quotes:
+            folder_name = f"'{folder_name}'"
+
+        return folder_name

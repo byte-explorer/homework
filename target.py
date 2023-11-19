@@ -17,6 +17,7 @@ class TestTarget(ABC):
 	"""Base class for test targets"""
 	def __init__(self, parameters: typing.Optional[str]):
 		self.cmd_prefix = []
+		self.login = []
 		self.set_user = ["sudo", "-u"]
 		self.add_user_commad = ['sudo', 'useradd', '-m']
 		self.execute_command = ["mkdir"]
@@ -101,17 +102,22 @@ class TestTarget(ABC):
 
 class LocalHost(TestTarget):
 	"""Test target to run on localhost"""
-
 	def run_command(self, command: typing.List[str]) -> typing.Tuple[bool, str]:
 		"""Run command against the localhost target."""
 		logger.debug(f"Running '{command}' command")
-		result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+		result = subprocess.run(self.login + command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
 		return result.returncode == 0, result.stdout + result.stderr
 	
 	def _construct_command(self, user: str, command: typing.List[str]) -> typing.List[str]:
 		"""Construct a command so it can run for specific target under specific user."""
-		return self.cmd_prefix + self.set_user + [user] + command
+		return self.set_user + [user] + command
+
+class RemoteHost(LocalHost):
+	"""Test target to run on localhost"""
+	def __init__(self, parameters: str):		
+		super().__init__(parameters)
+		self.login = ["ssh", f"root@{self.parameters}"]
 
 class DockerHost(TestTarget):
 	"""Test target to run on Docker host"""

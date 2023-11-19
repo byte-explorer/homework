@@ -4,7 +4,7 @@
         "exp_permissions" : "drwxr-xr-x"
     },
     {
-        "name" : "happy_path_parent_dirs_mode_precondition",
+        "name" : "happy_path_parent_dirs_mode_umask_0022_precondition",
         "base_dir" : "/tmp/parent/dir/no/mode/change",
         "depth" : 0,
         "flags" : ["-m", "555", "-p"],
@@ -12,7 +12,7 @@
         "clean_up" : false
     },
     {
-        "name" : "happy_path_parent_dirs_mode_check",
+        "name" : "happy_path_parent_dirs_mode_umask_0022_check",
         "base_dir" : "/tmp/parent",
         "depth" : 0,
         "flags" : ["-p"],

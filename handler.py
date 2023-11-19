@@ -3,14 +3,17 @@ import logging
 import typing
 
 from datatypes import CheckResult, ExecuteResult, TargetSpecs, TestCase, TestCaseResult
-from target import DockerHost, LocalHost, TestTarget
+from target import DockerHost, LocalHost, RemoteHost, TestTarget
 from utils import PathFactory
 
 logger = logging.getLogger(__name__)
 
 class SupportedTargets(Enum):
+	"""Supperted Test Targets"""
 	LOCALHOST = LocalHost
 	DOCKERHOST = DockerHost
+	REMOTEHOST = RemoteHost
+
 
 class TestHandler:
 	def __init__(self, test_cases: typing.List) -> None:
@@ -29,10 +32,10 @@ class TestHandler:
 				test_case.test_result = self._check_results(test_case, execute_result, check_result)
 				# Log results
 				if test_case.test_result:
-					logger.info(f"[PASS] Target: {target_name}, Test case name: {test_case.name}")
+					logger.info(f"[PASS] Target: {target_name}, Test case: {test_case.name}")
 				else:
 					logger.info(
-						f"[FAIL] Target: {target_name}, Test case name: {test_case.name}, "
+						f"[FAIL] Target: {target_name}, Test case: {test_case.name}, "
 						f"Test case spec: {test_case}, Exec status: {execute_result}, Check status: {check_result}"
 					)
 
@@ -51,8 +54,8 @@ class TestHandler:
 			if test_case.clean_up and check_result.folder_exists:
 				test_target.clean(test_case.base_dir, target_path)
 		else:
-			execute_result = ExecuteResult(success=False, output="Target wasn't created")
-			check_result = CheckResult(success=False, output="Check wasn't executed")
+			execute_result = ExecuteResult(output="Target wasn't created")
+			check_result = CheckResult(output="Check wasn't executed")
 		return execute_result, check_result
 
 	@staticmethod

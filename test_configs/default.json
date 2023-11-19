@@ -8,6 +8,14 @@
         ]
     },
     {
+        "target" : "remotehost_192.168.1.80",
+        "test_suites" : [
+            "test_suites/happy_path_general.json",
+            "test_suites/happy_path_0022.json",
+            "test_suites/error_cases_general.json"
+        ]
+    },
+    {
         "target" : "dockerhost_oraclelinux:9",
         "test_suites" : [
             "test_suites/happy_path_general.json",

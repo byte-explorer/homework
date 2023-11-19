@@ -39,6 +39,8 @@ class TestCase:
 	folder_name_length: int = 10
 	# Allow whitespaces in a folder name
 	allow_spaces: bool = False
+	# Add a quote sign to start and end of path
+	add_quotes: bool = False
 	# Flag whether a valid folder name to be generated
 	valid_folder_name : bool = True
 	# Flag whether created folder should be deleted after test
@@ -81,5 +83,8 @@ class CheckResult:
 
 @dataclass
 class TargetSpecs:
+	"""Test Target Specification"""
+	# Host type
 	host: str
+	# Host parameters
 	parameters: typing.Optional[str] = None
