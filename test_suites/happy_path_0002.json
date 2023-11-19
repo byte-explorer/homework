@@ -1,0 +1,21 @@
+[
+    {
+        "name" : "happy_path_set_permissions_umask_0002",
+        "exp_permissions" : "drwxrwxr-x"
+    },
+    {
+        "name" : "happy_path_parent_dirs_mode_precondition",
+        "base_dir" : "/tmp/parent/dir/no/mode/change",
+        "depth" : 0,
+        "flags" : ["-m", "555", "-p"],
+        "exp_permissions" : "dr-xr-xr-x",
+        "clean_up" : false
+    },
+    {
+        "name" : "happy_path_parent_dirs_mode_check",
+        "base_dir" : "/tmp/parent",
+        "depth" : 0,
+        "flags" : ["-p"],
+        "exp_permissions" : "drwxrwxr-x"
+    }
+]

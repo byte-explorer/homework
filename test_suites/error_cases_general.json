@@ -1,12 +1,12 @@
 [
     {
-        "name" : "error_case_dir_already_exist_1_2",
+        "name" : "error_case_dir_already_exist_precondition",
         "base_dir" : "/tmp/already_exists",
         "depth" : 0,
         "clean_up" : false
     },
     {
-        "name" : "error_case_dir_already_exist_2_2",
+        "name" : "error_case_dir_already_exist_check",
         "base_dir" : "/tmp/already_exists",
         "depth" : 0,
         "exp_run_no_error" : false,
@@ -19,7 +19,7 @@
         "exp_existance" : false
     },
     {
-        "name" : "error_case_disable_access_1_3",
+        "name" : "error_case_disable_access_precondition",
         "user_run" : "root",
         "base_dir" : "/tmp/disable_access",
         "depth" : 0,
@@ -27,7 +27,7 @@
         "clean_up" : false
     },
     {
-        "name" : "error_case_disable_access_2_3",
+        "name" : "error_case_disable_access_check",
         "user_run" : "root",
         "base_dir" : "/tmp/disable_access/new",
         "depth" : 0,
@@ -35,7 +35,7 @@
         "exp_existance" : false
     },
     {
-        "name" : "error_case_disable_access_3_3",
+        "name" : "error_case_disable_access_clean_up",
         "user_run" : "root",
         "base_dir" : "/tmp/disable_access",
         "depth" : 0,

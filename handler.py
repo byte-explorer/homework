@@ -24,6 +24,7 @@ class TestHandler:
 			for test_case in self.test_cases[target_name]:
 				logger.debug(f"Target: {target_name}, Test case: {test_case}")
 				execute_result, check_result = self._run_single(test_target, test_case)
+				logger.debug(f"Exec: {execute_result}, Check: {check_result}")
 				# Check results against test case spec		
 				test_case.test_result = self._check_results(test_case, execute_result, check_result)
 				# Log results

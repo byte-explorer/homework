@@ -1,7 +1,7 @@
 #!/bin/bash
 
 apt-get update
-apt-get install -y ca-certificates curl gnupg git python3 python3-pip
+apt-get install -y ca-certificates curl gnupg qemu qemu-user-static qemu-user binfmt-support git python3 python3-pip
 # Add Docker's official GPG key:
 install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg -y --dearmor -o /etc/apt/keyrings/docker.gpg
