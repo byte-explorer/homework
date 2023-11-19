@@ -45,6 +45,8 @@ class TestCase:
 	add_quotes: bool = False
 	# Flag whether a valid folder name to be generated
 	valid_folder_name : bool = True
+	# Security check
+	security_check: bool = True
 	# Flag whether created folder should be deleted after test
 	clean_up: bool = True
 	# Additional flags

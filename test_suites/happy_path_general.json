@@ -16,7 +16,7 @@
     },
     {
         "name" : "happy_path_max_dir_name_length",
-        "folder_name_length" : 255
+        "folder_name_length" : 256
     },
     {
         "name" : "happy_path_set_permissions_numeric_1",
@@ -53,10 +53,17 @@
     {
         "name" : "happy_path_allow_spaces",
         "depth" : 100,
-        "base_dir" : "/tmp/allow_spaces",
         "flags" : ["-p"],
         "allow_spaces" : true,
         "add_quotes" : true
+    },
+    {
+        "name" : "happy_path_allow_spaces_and_set_permissions",
+        "depth" : 100,
+        "flags" : ["-p", "-m", "777"],
+        "allow_spaces" : true,
+        "add_quotes" : true,
+        "exp_permissions" : "drwxrwxrwx"
     },
     {
         "name" : "happy_path_verbose",

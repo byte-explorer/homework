@@ -17,3 +17,5 @@ FR_013 - mkdir should report an error if folder already exists
 FR_014 - mkdir should not be able to create a directory which name is grater than 255 chars
 FR_015 - mkdir should be able to create a directory permissions so other users cannot access it
 FR_016 - mkdir should not be able to create directories with forbidden chars
+FR_017 - mkdir should report an error if no arguments provided
+FR_018 - mkdir should report an error if invalid option is provided

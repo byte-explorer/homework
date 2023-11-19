@@ -9,7 +9,7 @@ import typing
 
 import docker
 
-from datatypes import CheckResult, ExecuteResult
+from datatypes import CheckResult, ExecuteResult, TestCase
 from utils import is_safe_path
 
 logger = logging.getLogger(__name__)
@@ -45,27 +45,35 @@ class TestTarget(ABC):
 			self.run_command(self.add_user_commad + [user])
 			logger.debug(f"User '{user}' created.")
 
-	def execute(self, target_path: str, user: str, flags: typing.List[str]) -> ExecuteResult:
+	def execute(self, test_case: TestCase, target_path: str) -> ExecuteResult:
 		"""Execute test case."""
-		if not is_safe_path(target_path):
+		if test_case.security_check and not is_safe_path(target_path):
 			return ExecuteResult(
 				success=False,
-				output="Path '{target_path}' is not safe or outside of allowed base - check logs for more details"
+				output=f"Path '{target_path}' is not safe or outside of allowed base - check logs for more details"
 			)
-		exec_command = self._construct_command(user, self.execute_command + flags + [target_path])
+		exec_command = self._construct_command(
+			test_case.user_run, self.execute_command + test_case.flags + [target_path]
+		)
 		success, output = self.run_command(exec_command)
 
 		return ExecuteResult(success=success, output=output)
 
-	def check(self, target_path: str, user: str, exp_permissions: str) -> CheckResult:
+	def check(self, test_case: TestCase, target_path: str) -> CheckResult:
 		"""Check test case execution results."""
+		if target_path == "":
+			return CheckResult(
+				folder_exists=False,
+				output="Empty path is provided - nothing to check!"
+			)
 		# Don't check if path is not safe
 		if not is_safe_path(target_path):
 			return CheckResult(
-				output="Path '{target_path}' is not safe or outside of allowed base - check logs for more details"
+				folder_exists=False,
+				output=f"Path '{target_path}' is not safe or outside of allowed base - check logs for more details"
 			)
 		# Check existance
-		check_existance_command = self._construct_command(user, self.test_command + [target_path])
+		check_existance_command = self._construct_command(test_case.user_check, self.test_command + [target_path])
 		existance_status, check_existance_info = self.run_command(check_existance_command)
 
 		# Don't check permission if target_path doesn't exist
@@ -77,7 +85,7 @@ class TestTarget(ABC):
 
 		# Check permissions
 		permissions = re.match(r'^([drwx-]+)\s+', check_existance_info).group(1)
-		permissions_check_status = permissions == exp_permissions
+		permissions_check_status = permissions == test_case.exp_permissions
 
 		return CheckResult(
 			folder_exists=existance_status,
@@ -88,10 +96,17 @@ class TestTarget(ABC):
 	def clean(self, base_dir: str, target_path: str) -> None:
 		"""Clean up after test execution."""
 		# Convert given dirs into Path objects
-		base_dir, target_path = Path(base_dir.strip('"')), Path(target_path.strip('"'))
+		base_dir, target_path = base_dir.strip('"'), target_path.strip('"')
 		# Find top directory path
 		try:
-			top_directory_path = base_dir / target_path.relative_to(base_dir).parts[0]
+			components = target_path.split("/")
+			top_component = None
+			for idx, component in enumerate(components):
+				if component == base_dir.split("/")[-1]:
+					top_component = components[idx + 1]
+					break
+			if top_component is not None:
+				top_directory_path = Path(base_dir) / top_component
 		except IndexError:
 			top_directory_path = base_dir
 		assert is_safe_path(str(top_directory_path))

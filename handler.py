@@ -1,6 +1,7 @@
 """Test Handler to execute tests and store results."""
 from enum import Enum
 import logging
+import threading
 import typing
 
 from datatypes import CheckResult, ExecuteResult, TargetSpecs, TestCase, TestCaseResult
@@ -24,24 +25,37 @@ class TestHandler:
 		self.successful_run = True
 
 	def run(self) -> None:
-		"""Run all test cases against all test targets."""
-		for target_name in self.test_cases:
+		"""Run all test cases against all test targets in parallel using threading."""
+		threads = []
+
+		def run_test(target_name: str, test_cases: typing.List[TestCase]) -> None:
+			"""Helper method to run test in a thread"""
 			test_target = self.target_factory(target_name)
-			for test_case in self.test_cases[target_name]:
-				logger.debug(f"Target: {target_name}, Test case: {test_case}")
+			for test_case in test_cases:
+				logger.debug(f"Target: {test_target}, Test case: {test_case}")
 				execute_result, check_result = self._run_single(test_target, test_case)
 				logger.debug(f"Exec: {execute_result}, Check: {check_result}")
 				# Check results against test case spec
 				test_case.test_result = self._check_results(test_case, execute_result, check_result)
 				# Log results
 				if test_case.test_result:
-					logger.info(f"[PASS] Target: {target_name}, Test case: {test_case.name}")
+					logger.info(f"[PASS] Target: {target_name}, Test case name: {test_case.name}")
 				else:
 					logger.info(
-						f"[FAIL] Target: {target_name}, Test case: {test_case.name}, "
+						f"[FAIL] Target: {target_name}, Test case name: {test_case.name}, "
 						f"Test case spec: {test_case}, Exec status: {execute_result}, Check status: {check_result}"
 					)
 					self.successful_run = False
+
+		# Create a thread for every test target
+		for target_name in self.test_cases:
+			thread = threading.Thread(target=run_test, args=(target_name, self.test_cases[target_name]))
+			threads.append(thread)
+			thread.start()
+
+		# Wait for all threads to complete
+		for thread in threads:
+			thread.join()
 
 	def _run_single(self, test_target: TestTarget, test_case: TestCase) -> typing.Tuple[ExecuteResult, CheckResult]:
 		"""Run single test case against single test target."""
@@ -52,8 +66,8 @@ class TestHandler:
 				test_target.add_user(user)
 			# Run the test and check results
 			target_path = self.path_factory.create_path(test_case)
-			execute_result = test_target.execute(target_path, test_case.user_run, test_case.flags)
-			check_result = test_target.check(target_path, test_case.user_check, test_case.exp_permissions)
+			execute_result = test_target.execute(test_case, target_path)
+			check_result = test_target.check(test_case, target_path)
 			# Clean up
 			if test_case.clean_up and check_result.folder_exists:
 				test_target.clean(test_case.base_dir, target_path)
@@ -64,16 +78,26 @@ class TestHandler:
 
 	def report(self) -> None:
 		"""Report test results and statistics."""
-		num_successful_test_cases =\
-			sum(1 for test_cases in self.test_cases.values() for case in test_cases if case.test_result)
-		num_total_test_cases = sum(1 for test_cases in self.test_cases.values() for _ in test_cases)
+		failing_cases = []
+		num_successful_test_cases = 0
+		num_total_test_cases = 0
+		for target_name in self.test_cases:
+			for test_case in self.test_cases[target_name]:
+				if test_case.test_result:
+					num_successful_test_cases += 1
+				else:
+					failing_cases.append(f"[{target_name} - {test_case.name}]")
+				num_total_test_cases += 1
+
 		stats = f"{num_successful_test_cases}/{num_total_test_cases}"
 		tested_hosts = ", ".join(self.test_cases.keys())
 
 		if self.successful_run:
-			logger.info(f"/**TEST PASSED: {stats} succeful test cases. Tested hosts: {tested_hosts}**/")
+			logger.info(f"/** TEST PASSED: {stats} succeful test cases. Tested hosts: {tested_hosts} **/")
 		else:
-			logger.info(f"/**TEST FAILED: {stats} succeful test cases. Tested hosts: {tested_hosts}**/")
+			logger.info(
+				f"/** TEST FAILED: {stats} succeful test cases. Tested hosts: {tested_hosts}, "
+				f"Failed cases: {', '.join(failing_cases)} **/")
 
 	@staticmethod
 	def _check_results(

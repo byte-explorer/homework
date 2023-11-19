@@ -59,14 +59,17 @@ class PathFactory:
 	"""Path factory to generate random path based on TestCase requirements."""
 	def create_path(self, test_case: TestCase) -> str:
 		"""Create a random path based on TestCase"""
-		path = Path(test_case.base_dir)
-		for _ in range(test_case.depth):
-			folder_name = self.generate_folder_name(test_case)
-			path /= folder_name
+		if not test_case.base_dir and test_case.depth == 0:
+			path = ""
+		else:
+			path = Path(test_case.base_dir)
+			for _ in range(test_case.depth):
+				folder_name = self.generate_folder_name(test_case)
+				path /= folder_name
 
-		path = str(path)
-		if test_case.add_quotes:
-			path = f'"{path}"'
+			path = str(path)
+			if test_case.add_quotes:
+				path = f'"{path}"'
 
 		logger.debug(f"PathFactory: generated: {path}")
 

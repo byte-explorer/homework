@@ -47,5 +47,21 @@
         "valid_folder_name" : false,
         "exp_run_no_error" : false,
         "exp_existance" : false
+    },
+    {
+        "name" : "error_case_no_arguments",
+        "depth" : 0,
+        "base_dir" : "",
+        "exp_run_no_error" : false,
+        "exp_existance" : false,
+        "security_check" : false,
+        "exp_run_output" : "mkdir: missing operand\nTry 'mkdir --help' for more information.\n|/usr/bin/mkdir: missing operand\nTry '/usr/bin/mkdir --help' for more information.\n"
+    },
+    {
+        "name" : "error_case_invalid_option",
+        "exp_run_no_error" : false,
+        "exp_existance" : false,
+        "flags" : ["-K"],
+        "exp_run_output" : "mkdir: invalid option -- 'K'\nTry 'mkdir --help' for more information.\n|/usr/bin/mkdir: invalid option -- 'K'\nTry '/usr/bin/mkdir --help' for more information.\n"
     }
 ]

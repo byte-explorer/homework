@@ -1,0 +1,10 @@
+[
+    {
+        "target" : "dockerhost_oraclelinux:9",
+        "test_suites" : [
+            "test_suites/happy_path_general.json",
+            "test_suites/happy_path_0022.json",
+            "test_suites/error_cases_general.json"
+        ]
+    }
+]
