@@ -4,7 +4,6 @@ import logging
 from pathlib import Path
 import re
 import subprocess
-import threading
 import typing
 
 import docker
@@ -172,12 +171,7 @@ class DockerHost(TestTarget):
 
 		return result.exit_code == 0, result.output.decode("utf-8")
 
-	def remove_container(self):
-		"""Stop and remove container"""
-		self.container.stop()
-		self.container.remove()
-
 	def __del__(self):
 		logger.debug("Stopping Docker Host")
-		thread = threading.Thread(target=self.remove_container)
-		thread.start()
+		self.container.stop()
+		self.container.remove()

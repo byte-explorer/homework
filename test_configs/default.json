@@ -36,7 +36,7 @@
         ]
     },
     {
-        "target" : "dockerhost_arm64v8/ubuntu:20.04",
+        "target" : "dockerhost_arm64v8/ubuntu:22.04",
         "test_suites" : [
             "test_suites/happy_path_general.json",
             "test_suites/happy_path_0002.json",

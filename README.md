@@ -10,11 +10,11 @@ Execution against remote targets expects a no-password access as the root user v
 Functional Requirements to be tested are stored in the [functional_requirements.txt](functional_requirements.txt), FR coverage by the test cases is shown in the [Requirements Traceability Matrix](Requirements_Traceability_Matrix.xlsx).
 
 ### Default test config runs the test against:
-- localhost
-- remote host (Raspberry Pi 2B)
+- localhost (Ubuntu 20.04)
+- remote host (Raspberry Pi 2B, Ubuntu MATE 18.04)
 - Docker image `oraclelinux:9`
 - Docker image `redhat/ubi8`
-- Docker image `arm64v8/ubuntu:20.04`
+- Docker image `arm64v8/ubuntu:22.04`
 
 ### Test execution
 
